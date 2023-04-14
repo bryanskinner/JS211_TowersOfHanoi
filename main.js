@@ -2,6 +2,7 @@
 
 const assert = require('assert');
 const readline = require('readline');
+const { start } = require('repl');
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
@@ -32,32 +33,53 @@ const printStacks = () => {
 // Next, what do you think this function should do?
 const movePiece = (startStack, endStack) => {
   // Your code here
-
-
-  // REMOVE A PIECE FROM startStack
+  //* Remove a piece from startStack and checks if it is a legal move
+  if(isLegal(startStack, endStack)) {
   let piece = stacks[startStack].pop();
   stacks[endStack].push(piece);
-  
-
+  }
 }
 
 
 // Before you move, should you check if the move it actually allowed? Should 3 be able to be stacked on 2
-const isLegal = () => {
+const isLegal = (startStack, endStack) => {
   // Your code here
 
+  // *Getting top ring from startStack and top ring from endStack
+  const startRing = stacks[startStack].slice(-1)[0];
+  const endRing = stacks[endStack].slice(-1)[0];
+  // console.log(startRing, endRing);
+  
+  // * if startStack is empty or if ring on endStack is larger than ring on startStack
+  if (stacks[endStack].length === 0) {
+      // console.log(startRing)
+    return true;
+  } else if (startRing < endRing) {
+    return true; 
+  } else {
+    return false;
+  }
 }
 
 // What is a win in Towers of Hanoi? When should this function run?
 const checkForWin = () => {
   // Your code here
-
+  
+  // *Checks for win if b or c has 4 rings, if not then returns false
+  if (stacks.b.length === 4 || stacks.c.length === 4) {
+    console.log('You win!');
+    return true; 
+  } else {
+    return false; 
+  }
 }
+
+
 
 // When is this function called? What should it do with its argument?
 const towersOfHanoi = (startStack, endStack) => {
   // Your code here
-movePiece(startStack, endStack)
+  movePiece(startStack, endStack)
 }
 
 const getPrompt = () => {
@@ -65,6 +87,9 @@ const getPrompt = () => {
   rl.question('start stack: ', (startStack) => {
     rl.question('end stack: ', (endStack) => {
       towersOfHanoi(startStack, endStack);
+      const startRing = stacks[startStack].slice(-1)[0];
+      const endRing = stacks[endStack].slice(-1)[0];
+      console.log(`**********`, startRing, endRing)
       getPrompt();
     });
   });
